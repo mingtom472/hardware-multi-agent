@@ -1,0 +1,68 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+frontend/.env*
+!frontend/.env.example
+# Other credential stores and private key material
+.envrc
+.netrc
+.npmrc
+.pypirc
+.aws/
+.ssh/
+secrets/
+.secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+credentials.json
+credentials.*.json
+service-account*.json
+service_account*.json
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+# Node
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+# Runtime data / caches
+.local/
+.cache/
+*.log
+# Runtime state outside the default .local directory
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+/uploads/
+/backend/uploads/
+user-uploads/
+/data/
+/backend/data/
+runtime-data/
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+
+# Browser test outputs
+frontend/test-results/
+frontend/playwright-report/

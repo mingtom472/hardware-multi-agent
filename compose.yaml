@@ -1,0 +1,80 @@
+# Default MVP: FastAPI + Next.js. Streamlit is an optional studio profile.
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      HW_MODEL_MODE: ${HW_MODEL_MODE:-mock}
+      HW_DATA_DIR: /app/.local/data
+    ports:
+      - '127.0.0.1:8000:8000'
+    volumes:
+      - studio-data:/app/.local/data
+    init: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+  studio:
+    profiles: [studio]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command:
+      - /app/.venv/bin/python
+      - -m
+      - streamlit
+      - run
+      - ui/streamlit_app.py
+      - --server.address
+      - 0.0.0.0
+      - --server.port
+      - '8501'
+      - --browser.gatherUsageStats
+      - 'false'
+    environment:
+      HW_API_URL: http://backend:8000
+      HW_BROWSER_API_URL: http://127.0.0.1:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - '127.0.0.1:8501:8501'
+    healthcheck:
+      test: [CMD, /app/.venv/bin/python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    init: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        BACKEND_URL: http://backend:8000
+    environment:
+      BACKEND_URL: http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - '127.0.0.1:3000:3000'
+    init: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+volumes:
+  studio-data:

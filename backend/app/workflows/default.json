@@ -1,0 +1,10 @@
+{
+  "name": "hardware_review",
+  "reviewers": ["openai", "deepseek", "doubao"],
+  "vision_provider": "openai",
+  "validator": "claude",
+  "summarizer": "glm",
+  "max_retries": 2,
+  "max_parallel": 3,
+  "timeout_seconds": 20
+}
